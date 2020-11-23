@@ -1,2 +1,1 @@
-# 
-#Implementation of random binning encoding and secrecy rate evaluation
+# Implementation of random binning encoding and secrecy rate evaluation
