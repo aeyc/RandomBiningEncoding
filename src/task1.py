@@ -1,54 +1,38 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 23 16:48:36 2020
+import random 
 
-@author: Ayca
-"""
+# @param str1, str2 binary strings with the SAME SIZE 
+# @return tmp: xor of str1 and str2 
+def xor(str1, str2): 
+    tmp = "" 
 
-import textdistance
-import itertools
+    for i in range(len(str1)): 
+        if (str1[i] == str2[i]):  
+            tmp += "0"
+        else:  
+            tmp += "1"
+    return tmp  
 
-def setDistance(x,distance):
-    total = ["".join(seq) for seq in itertools.product("01", repeat=len(x))]
-    l =[]
-    for i in total:
-        if textdistance.hamming(x,i)<=distance:
-            l.append(i)
-    return l
+# @param x: binary string 
+# @param dist: hamilton distance to apply 
+# @return l: binary string with distance dist from x 
+def applyDistance(x, dist):
+    return xor(x, genBinStr(len(x), dist))
+    
+# function used to generate a binary string with length len 
+# and a number of bit at 1 equals to nOf1 
+def genBinStr(len, nOf1): 
+    str = "1" * nOf1 + "0" * (len-nOf1) # generate trivial binary string 
+    l = list(str) # convert the string to list (to edit it) 
+    random.shuffle(l) # shuffle randomly the string str
+    return ''.join(l) # convert list to string and return it 
+    
+# TASK 1 
 x = "1001000"
-#find distance sets for both set y and set z
-y_distance_set = setDistance(x, 1)
-z_distance_set = setDistance(x, 3)
+y_dist = random.randint(0, 1)
+y = applyDistance(x, y_dist) # generate y starting from y, and applying 0 or 1 errors  
+z_dist = random.randint(0, 3)
+z = applyDistance(x, z_dist) # generate y starting from y, and applying 0, 1, 2 or 3 errors 
 
-#we have string binary numbers, convert them to integer lists
-#for perform xor operation
-x = [int(i) for i in list(x)]
-
-tmp =[]
-for i in y_distance_set:
-     tmp.append([int(j) for j in list(i)])
-y_distance_set = tmp
-
-tmp =[]
-for i in z_distance_set:
-     tmp.append([int(j) for j in list(i)])
-z_distance_set = tmp
-
-#perform xor operation with y_distance_set elements and x
-#to find y_set
-y_set = []
-for i in y_distance_set:
-    tmp =[]
-    for j in range(0, len(x)):
-        tmp.append(x[j]^i[j])
-    y_set.append(tmp)
-
-#perform xor operation with z_distance_set elements and x
-#to find z_set
-z_set = []    
-for i in z_distance_set:
-    tmp =[]
-    for j in range(0, len(x)):
-        tmp.append(x[j]^i[j])
-    z_set.append(tmp)
+print("X: %s\nY: %s\tDistance of y: %s\nZ: %s\tDistance of z: %s" % (x, y, y_dist, z, z_dist)) 
