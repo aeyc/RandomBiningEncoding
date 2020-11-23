@@ -1,2 +1,2 @@
-# RandomBiningEncoding
-lab2
+# 
+#Implementation of random binning encoding and secrecy rate evaluation
