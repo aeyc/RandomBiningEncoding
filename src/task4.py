@@ -18,28 +18,13 @@ def randomComplement(h):
             k = k + '0'
     return k
 
-
-
-
-
-# Generate u
-u = "000" # <-- insert u here
-u = "0" + u
-
-# Random Binning Encode u
-x = task2.encode(u)
-
 # Add error to y to make it z
 z_maxDistance = 3
-z = task1.applyMaxDistance(x, z_maxDistance) # generate z starting from x, with maximum hamming distance of z_maxDistance
-
-print("from plain= {0}, x= {1}, z= {2} ".format(u, x, z))
 
 vect_z = []
-u_l = []
 for number in range(2**3):
     u = "{0:04b}".format(number)
-    u_l.append(u)
+
     for i in range(10**4):
         x = task2.encode(u)
         x = randomComplement(x)
@@ -57,11 +42,10 @@ inf = 0
 
 #p(uz) = 1/128 ->len(dict_z) 
 #p(u) = 1/8 {000,001,010,011,100,101,110,111}
-#p(z) = dict_z.values[i]/len(vect_z)
+#p(z) = dict_z.values[i]/10**4
 for i in dict_z.keys():
-    tmp = (1/8)*(dict_z[i]/len(vect_z)) #p(u)*p(z)
+    tmp = (1/8)*(dict_z[i]/10000) #p(u)*p(z)
     tmp = (1/128)/tmp
     inf += (1/128)*(math.log(tmp,2))
     
-print("Mutual Information I(u,z):",inf)
-    
+print("Mutual Information I(u,z):",inf) #result = 0.0009297674692972775 ~0
