@@ -1,0 +1,18 @@
+TASK 2
+
+For task 2 we have developed a python script. It gets from keyboard input a three bit string (plaintext),
+and append a 0 to it. Then it pass the four bit strig to an encoding function that calculates three parity bits
+according to hamming (7,4). it enqueue these new bits to the plaintext. it then calculates the
+binary complement and select a random int from set {0,1}, if the random number is equal to 0
+it prints the original ciphertext, otherwise it prints its binary complement.
+
+TASK 3 
+For task 3 we have developed a python script. It gets from keyboard input a seven bit string (ciphertext),
+it calculates the syndrome, according to hamming (7,4), from the last three bits of the string.
+Then comparing the value of the sindrome we can understan if the message has an error in one bit 
+or if it is correct. If the syndrome is equal to six there is an error in the first bit (the most significant one),
+If the syndrome is equal to five there is an error in the second bit, If the syndrome is equal to three there is an error in the third bit,
+If the syndrome is equal to seven there is an error in the fourth bit. For other values of the syndrome it means
+that there is no error or it is in the parity bit. It correct the error if present. Checks if
+the first bit is equal to 1, if it is, it prints the binary complement of bits 2-4 (considering bits
+numered as 1-7), if it is equal to 0 it print bits 2-4 as they are.
