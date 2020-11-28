@@ -5,7 +5,6 @@ Created on Fri Nov 27 17:56:52 2020
 
 @author: Ayca
 """
-import task3
 import task5
 import random
 from matplotlib import pyplot
@@ -24,12 +23,6 @@ vect_z = []
 
 for number in range(2**7):
     x = "{0:07b}".format(number)
-    #task3
-    u = task3.decrypt(x.strip()) 
-    if u in u_dict:
-        u_dict[u].append(int(x,2))
-    else:
-        u_dict[u] = [int(x,2)]
     z_dict = dict()
     z_dict = {}
     for i in range(10**4):
@@ -47,9 +40,55 @@ print("")
 pyplot.hist(vect_z, bins=2**7)
 pyplot.show()
 
+#%%
+"""
 
+
+ALL UPPERCASE METHODS ARE PSEUDO
+
+
+"""
+#lim_(n->infinite) P[û != u] = 0
+error_counter = [] #per bits?
+
+for number in range(2**3): 
+    #calculate u with decoder implemented in task5
+    for length in range(7,10**6): ##of bits of x start from 7 to some value
+        x = ENCODER_TASK5(u,length) #length = # of bits of x
+        u_decoded = DECODER_TASK5(x)
+        u = "{0:04b}".format(number)
+        if HAMMING_DISTANCE(u,u_decoded) != 0: #should we use bitwise comparison here??
+            error_counter.append(HAMMING_DISTANCE(u,u_decoded))
+    
+    #plot for each u
+    pyplot.hist(error_counter, bins=2**3)
+    pyplot.show()
+    
+#%%    
+#Mutual Information lim_(n->infinite) I(u;z) = 0
+#I(u;z) = H(z) - H(z|u)
+#H(z) = -(sum[p(z)*log_2 p(z)] for all z in Z)
+#H(z|u) = sum[p(u)*H(z| u=a)] for all u in U
+#I(u;z) = H(z) + H(u) - H(u,z)
+#Also I(u;z) can be represented w/same formula in task4
+#ref: https://www2.isye.gatech.edu/~yxie77/ece587/Lecture2.pdf
+    
 from collections import Counter
 dict_z = Counter(vect_z)
+inf = 0
 
+#WILL CALCULATE ABOVE VALUES
+p_u = 
+p_uz = 
+cardinality_z = 
+for i in dict_z.keys():
+    tmp = (p_u*(dict_z[i]/cardinality_z) #p(u)*p(z)
+    tmp = (p_uz)/tmp
+    inf += (p_uz)*(math.log(tmp,2))
+    
+print("Mutual Information I(u,z):",inf)
+
+#%%
+#Upperbound = [cardinality_y * | T_z|x |] / [| T_y|x | * cardinality_z]
 
 
