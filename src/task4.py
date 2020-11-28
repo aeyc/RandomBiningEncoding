@@ -49,3 +49,7 @@ for i in dict_z.keys():
     inf += (1/128)*(math.log(tmp,2))
     
 print("Mutual Information I(u,z):",inf)
+#Mutual Information I(u,z): 0.001158799925930126
+#Mutual Information I(u,z): 0.001346879886474384
+#Mutual Information I(u,z): 0.00113748879397734
+#Mutual Information I(u,z): 0.0014034513722299617
