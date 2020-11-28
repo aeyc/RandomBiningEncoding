@@ -1,0 +1,17 @@
+TASK 1  
+For task 1 we created a python script, in particular to implement the uniform error wiretap channel we defined 
+the applyMaxDistance function, which given at input x creates a binary string with at most the specified hamming distance from it. 
+The legitimate channel introduces at most 1 binary error per word, while the eavesdropper channel introduces at most 3 binaries 
+error per word.
+The idea behind the applyMaxDistance function is to: first identify the hamming distance d to be considered, then create 
+a random binary string with d bit at 1, and then calculate the xor between the input and the random binary string generated. 
+At the end of the task, stats_y and stats_z variables are created to store the number of occurrences of every output of eavesdropper and legitimate channels. 
+
+
+TASK 5
+For the task5 we have implemented a binary symmetric channel, with epsilon and delta error probability, respectively for legitimante 
+receiver and eavesdropper channel. In particular we defined the function flipBinStr that allows to flip every bit of the 
+considerated binary string with the specified probability. 
+We verified the correctness of the implementation by trasmitting a long binary sequence, checking the number of bit errors 
+in each output and estimating from them the value of epsilon and delta used. Then, we connected the wiretap channel with 
+the random binning encoder and decoder from tasks 2 and 3, and simulated several trasmissions. 
