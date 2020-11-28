@@ -49,10 +49,11 @@ ALL UPPERCASE METHODS ARE PSEUDO
 
 """
 #lim_(n->infinite) P[û != u] = 0
-error_counter = [] #per bits?
+
 
 for number in range(2**3): 
     #calculate u with decoder implemented in task5
+    error_counter = [] #per bits?
     for length in range(7,10**6): ##of bits of x start from 7 to some value
         x = ENCODER_TASK5(u,length) #length = # of bits of x
         u_decoded = DECODER_TASK5(x)
