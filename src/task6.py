@@ -77,7 +77,7 @@ from collections import Counter
 dict_z = Counter(vect_z)
 inf = 0
 
-#WILL CALCULATE ABOVE VALUES
+#WILL CALCULATE BELOW VALUES
 p_u = 
 p_uz = 
 cardinality_z = 
