@@ -93,9 +93,9 @@ number = 0
 #plot z distribution given u
 for i in vect_z:
     pyplot.hist(i, bins=2**7)
-    pyplot.title("Emprical conditional pmd of z given u = {}".format("{0:04b}".format(number)))
+    pyplot.title("Emprical conditional pmd of z given u = {}".format("{0:03b}".format(number)))
     pyplot.ylabel("Occurence")
-    pyplot.ylabel("Value of z")
+    pyplot.xlabel("Value of z")
     
     pyplot.show()
     number+=1
