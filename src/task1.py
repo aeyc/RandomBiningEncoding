@@ -94,3 +94,18 @@ for i in range(10 ** 4):
 #print('Z distribution')
 #for i, (k, v) in enumerate(stats_z.items()):
 #    print(k, v)   
+
+
+"""
+undo comment below lines for plot pmd of z given x
+"""
+# from matplotlib import pyplot
+# import collections
+# od = collections.OrderedDict(sorted(stats_z.items()))
+# l_z = list(od.values())
+# l_k = list(od.keys())
+# pyplot.plot( l_k,l_z)
+# pyplot.title("Emprical conditional pmd of z given x = {}".format(x))
+# pyplot.ylabel("Occurence")
+# pyplot.xlabel("Value of z")
+# pyplot.show()
