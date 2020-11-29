@@ -11,7 +11,7 @@ from task4 import randomComplement
 from task3 import decrypt as decode 
 import random
 from matplotlib import pyplot 
-import math
+from math import log
 from collections import Counter
 
 
@@ -68,6 +68,9 @@ stats_z = [] # Will save every stats_z_d
 
 vect_y = [] # Vector af all z's
 stats_y = [] # Will save every stats_z_d
+
+epsilons = []
+deltas = []
 #dependency -> pip install textdistance
 for number in range(2**3):
     u = "{0:04b}".format(number)
@@ -83,13 +86,15 @@ for number in range(2**3):
     
     vect_y_d = [] # Vector of all y given one u=d 
     stats_y_d = [0]*(2**7) #Map having stas_y_d[y] = <counted times>; for a given u=d
-    
+    #epsilon<delta for make secrecy possible
+    epsilon = round(random.uniform(0.1, 0.25), 2)
+    delta = round(random.uniform(0.25, 0.5), 2)
+    epsilons.append(epsilon)
+    deltas.append(delta)
     for i in range(10**4):
         x = encode(u)
         x_r = randomComplement(x)
-        #epsilon<delta for make secrecy possible
-        epsilon = round(random.uniform(0, 0.25), 2)
-        delta = round(random.uniform(0.25, 0.5), 2)
+        
         y = flipBinStr(x, epsilon) # we can have more than one error in a single codeword over the legitimate channel 
         z = flipBinStr(x_r, delta)
         
@@ -174,7 +179,7 @@ for i in vect_z:
     for j in dict_z.keys():
         tmp = (1/8)*(dict_z[j]/10000) #p(u)*p(z)
         tmp = ((1/8)*(1/128))/tmp #p(uz) = 1/8 * 1/128
-        inf += (1/128)*(math.log(tmp,2))
+        inf += (1/128)*(log(tmp,2))
         
     print("Mutual Information I(u,z):",inf)
 
@@ -183,15 +188,39 @@ for i in vect_z:
 #%%
 #Upperbound = [cardinality_y * | T_z|x |] / [| T_y|x | * cardinality_z]
 #10**4 realizations 
-cardinality_y = 2**7 #7 bit binary string
-cardinality_z = 2**7 #7bit binary string
-keys = list(dict_z_total["000"].keys())
-keys_u = list(dict_z_total.keys())
-upper_bound_est =[]
-for u_key in keys_u:
-    for key in keys:
-        n_yx = dict_y_total[u_key][key]/10000
-        n_zx = dict_z_total[u_key][key]/10000
-        upper_bound = n_zx/n_yx
-        upper_bound_est.append(upper_bound)
-        
+# cardinality_y = 2**7 #7 bit binary string
+# cardinality_z = 2**7 #7bit binary string
+# keys = list(dict_z_total["000"].keys())
+# keys_u = list(dict_z_total.keys())
+# upper_bound_est =[]
+# for u_key in keys_u:
+#     for key in keys:
+#         n_yx = dict_y_total[u_key][key]/10000
+#         n_zx = dict_z_total[u_key][key]/10000
+#         upper_bound = n_zx/n_yx
+#         upper_bound_est.append(upper_bound)
+#%%   
+#Secrecy capacity for the wiretap BSC
+cs_list = []
+for i in range(0,len(epsilons)):
+    h2_epsilon = epsilons[i]*log(epsilons[i],0.5) + (1-epsilons[i])*(log((1-epsilons[i]),0.5))
+    h2_delta = deltas[i]*log(deltas[i],0.5) + (1-deltas[i])*(log((1-deltas[i]),0.5))
+    cs = h2_delta - h2_epsilon
+    cs_list.append(cs)
+    print("For epsilon = {}\nFor delta = {}\nCs = {}\n".format(epsilons[i],deltas[i],cs))
+ 
+pyplot.plot(epsilons, deltas,'ro')
+pyplot.title("epsilon vs delta")
+pyplot.ylabel("delta")     
+pyplot.xlabel("epsilon") 
+
+pyplot.show() 
+pyplot.plot(epsilons, cs_list,'ro')
+pyplot.title("epsilon vs cs")
+pyplot.ylabel("cs")     
+pyplot.xlabel("epsilon") 
+
+pyplot.show() 
+    
+    
+    
