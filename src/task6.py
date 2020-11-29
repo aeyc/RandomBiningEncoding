@@ -7,6 +7,7 @@ Created on Fri Nov 27 17:56:52 2020
 """
 from task5 import flipBinStr
 from task2_2 import encode 
+from task4 import randomComplement
 from task3 import decrypt as decode 
 import random
 from matplotlib import pyplot 
@@ -32,40 +33,19 @@ for number in range(2**7):
     else:
         u_dict[u_decoded] = [int(x,2)]
         
-        
-# stats_z = dict()
-vect_z = [] # Vector af all z's
-stats_z = [] # Will save every stats_z_d 
-for number in range(2**3):
-    u = "{0:04b}".format(number)
-    vect_z_d = [] # Vector of all z given one u=d 
-    stats_z_d = [0]*(2**7) #Map having stas_z_d[z] = <counted times>; for a given u=d
-
-    for i in range(10**4):
-        #if epsilon < delta -> no secrecy possible
-        x = encode(u)
-        epsilon = round(random.uniform(0, 0.25), 2)
-        delta = round(random.uniform(0.25, 0.5), 2)
-        
-        y = flipBinStr(x, epsilon)
-        z = flipBinStr(x, delta)
-        # Count how many times each z appears 
-        stats_z_d[int(z,2)] += 1 
-        # Saves what z we get
-        vect_z_d.append(int(z,2))
-    # Appending oll of the data from one loop, for calculus later
-    stats_z.append(stats_z_d)
-    vect_z.append(vect_z_d)
-
-
-
-
-
 # #|Z| = 128, |Y| = 128
         
 # print("")
 
-
+x_assumption = "0100000" 
+y_a_dict = dict()
+y_a_dict = {}
+for i in range(10**4):
+    y_assumption = flipBinStr(x_assumption,0.2)
+    if y_assumption in y_a_dict:
+        y_a_dict[y_assumption]+=1
+    else:
+        y_a_dict[y_assumption]=1
 #%%
 """
 
@@ -77,11 +57,17 @@ error_counter = dict()
 error_counter = {}
 error_rate = 0
 
-vect_z = [] # Vector af all z's
-stats_z = [] # Will save every stats_z_d 
-vect_y = [] # Vector af all z's
-stats_y = [] # Will save every stats_y_d 
+dict_z_total = dict()
+dict_z_total ={}
+dict_y_total = dict()
+dict_y_total ={}
 
+# stats_z = dict()
+vect_z = [] # Vector af all z's
+stats_z = [] # Will save every stats_z_d
+
+vect_y = [] # Vector af all z's
+stats_y = [] # Will save every stats_z_d
 #dependency -> pip install textdistance
 for number in range(2**3):
     u = "{0:04b}".format(number)
@@ -89,18 +75,23 @@ for number in range(2**3):
     
     vect_z_d = [] # Vector of all z given one u=d 
     stats_z_d = [0]*(2**7) #Map having stas_z_d[z] = <counted times>; for a given u=d
+    dict_y_local = dict()
+    dict_y_local ={} 
     
+    dict_z_local = dict()
+    dict_z_local ={} 
     
     vect_y_d = [] # Vector of all y given one u=d 
     stats_y_d = [0]*(2**7) #Map having stas_y_d[y] = <counted times>; for a given u=d
     
     for i in range(10**4):
         x = encode(u)
+        x_r = randomComplement(x)
         #epsilon<delta for make secrecy possible
         epsilon = round(random.uniform(0, 0.25), 2)
         delta = round(random.uniform(0.25, 0.5), 2)
         y = flipBinStr(x, epsilon) # we can have more than one error in a single codeword over the legitimate channel 
-        z = flipBinStr(x, delta)
+        z = flipBinStr(x_r, delta)
         
         # Count how many times each z appears 
         stats_z_d[int(z,2)] += 1 
@@ -118,6 +109,18 @@ for number in range(2**3):
             dist = 1
         else:
             dist = 0
+            
+        #for analyzing y mappings per u
+        if y in dict_y_local:
+            dict_y_local[y] +=1
+        else:
+            dict_y_local[y] =1
+            
+        if z in dict_z_local:
+            dict_z_local[z] +=1
+        else:
+            dict_z_local[z] =1
+            
         current_error.append(dist)
     # Appending oll of the data from one loop, for calculus later
     stats_z.append(stats_z_d)
@@ -127,6 +130,8 @@ for number in range(2**3):
     stats_y.append(stats_y_d)
     vect_y.append(vect_y_d)
     
+    dict_y_total[u] = dict_y_local
+    dict_z_total[u] = dict_z_local
     error_counter[u] = current_error
     error_rate = sum(current_error)/10**4
     print("Error rate = {} when u = {}".format(error_rate,u))
@@ -140,22 +145,22 @@ for number in range(2**3):
     
     
 #%%    
-#Mutual Information lim_(n->infinite) I(u;z) = 0
-#I(u;z) = H(z) - H(z|u)
-#H(z) = -(sum[p(z)*log_2 p(z)] for all z in Z)
-#H(z|u) = sum[p(u)*H(z| u=a)] for all u in U
-#I(u;z) = H(z) + H(u) - H(u,z)
-#Also I(u;z) can be represented w/same formula in task4
-#ref: https://www2.isye.gatech.edu/~yxie77/ece587/Lecture2.pdf
+# Mutual Information lim_(n->infinite) I(u;z) = 0
+# I(u;z) = H(z) - H(z|u)
+# H(z) = -(sum[p(z)*log_2 p(z)] for all z in Z)
+# H(z|u) = sum[p(u)*H(z| u=a)] for all u in U
+# I(u;z) = H(z) + H(u) - H(u,z)
+# Also I(u;z) can be represented w/same formula in task4
+# ref: https://www2.isye.gatech.edu/~yxie77/ece587/Lecture2.pdf
     
 
 number = 0
 #plot z distribution given u
 for i in vect_z:
     pyplot.hist(i, bins=2**7)
-    pyplot.title("Emprical conditional pmd of z given u = {}".format("{0:04b}".format(number)))
+    pyplot.title("Emprical conditional pmd of z given u = {}".format("{0:03b}".format(number)))
     pyplot.ylabel("Occurence")
-    pyplot.ylabel("Value of z")
+    pyplot.xlabel("Value of z")
     pyplot.show()
     number+=1
 
@@ -177,5 +182,16 @@ for i in vect_z:
 
 #%%
 #Upperbound = [cardinality_y * | T_z|x |] / [| T_y|x | * cardinality_z]
-
-
+#10**4 realizations 
+cardinality_y = 2**7 #7 bit binary string
+cardinality_z = 2**7 #7bit binary string
+keys = list(dict_z_total["000"].keys())
+keys_u = list(dict_z_total.keys())
+upper_bound_est =[]
+for u_key in keys_u:
+    for key in keys:
+        n_yx = dict_y_total[u_key][key]/10000
+        n_zx = dict_z_total[u_key][key]/10000
+        upper_bound = n_zx/n_yx
+        upper_bound_est.append(upper_bound)
+        
